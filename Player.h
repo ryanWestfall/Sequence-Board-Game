@@ -20,8 +20,11 @@ public:
     Player(Deck* d, string c) : deck(d), chip(c) {}
     ~Player() {}
 
+    void pTurn();
     void getCards();
     void getCard();
     void displayCards();
     string pickCard();
+    void merge(list<string>& left, list<string>& right, list<string>& result);
+    void mergeSortHand(list<string>& hand);
 };

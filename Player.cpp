@@ -1,5 +1,10 @@
 #include "Player.h"
 
+void Player::pTurn()
+{
+
+}
+
 //get 7 cards
 void Player::getCards()
 {
@@ -31,6 +36,62 @@ void Player::displayCards()
 
 } 
 
+//RECURSIVE SORT FOR HAND 
+void Player::merge(list<string>& left, list<string>& right, list<string>& result)
+{
+    while (!left.empty() && !right.empty())
+    {
+        if (left.front() <= right.front())
+        {
+            result.push_back(left.front());
+            left.pop_front();
+        }
+        else
+        {
+            result.push_back(right.front());
+            right.pop_front();
+        }
+    }
+
+    while (!left.empty())
+    {
+        result.push_back(left.front());
+        left.pop_front();
+    }
+
+    while (!right.empty())
+    {
+        result.push_back(right.front());
+        right.pop_front();
+    }
+}
+
+
+void Player::mergeSortHand(list<string>& hand)
+{
+    if (hand.size() <= 1)
+        return;
+
+    list<string> left, right;
+    int middle = hand.size() / 2;
+
+    auto it = hand.begin();
+    for (int i = 0; i < middle; ++i, ++it)
+    {
+        left.push_back(*it);
+    }
+
+    for (; it != hand.end(); ++it)
+    {
+        right.push_back(*it);
+    }
+
+    mergeSortHand(left);
+    mergeSortHand(right);
+
+    hand.clear();
+    merge(left, right, hand);
+}
 
 
 //pick a card //FIX CODE ERASE CARD IN HAND.

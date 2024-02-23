@@ -83,14 +83,117 @@ void Board::putChipOnBoard(string card, Player &p)
     }
 }
 
-//if JH or JD remove string symbol
-void Board::removeChip()
+//IF JH or JD REMOVE STRING VARIBLE
+void Board::removeChip(Player& p)
 {
-        cout << "Type what chip you want to remove." << endl;
-      //  cout << "Chip : ";  cin >> rChip; cout << endl;
-      // if 2 on board
-      // cout << " The first one or second one (1) or (2)
-        //take the original board copy everthing else but the card that chip is beening removed. 
+    cout << "Enter the spot where you want to remove your chip: ";
+    cin >> spot;
+    cout << endl;
+
+    auto it = originalSpots.find(p.chip);
+    if (it != originalSpots.end())
+    {
+        const string& originalSpot = it->first;
+        int chipRow = -1;
+        int chipCol = -1;
+
+        for (int i = 0; i < ROWS; ++i)
+        {
+            for (int j = 0; j < COLS; ++j)
+            {
+                if (board[i][j] == p.chip)
+                {
+                    chipRow = i;
+                    chipCol = j;
+                    break;
+                }
+            }
+
+            if (chipRow != -1 && chipCol != -1)
+            {
+                break;
+            }
+        }
+
+        if (chipRow != -1 && chipCol != -1)
+        {
+            board[chipRow][chipCol] = originalSpot; // Replace the chip with its original spot
+            originalSpots.erase(it); // Remove the chip from the original spots data structure
+        }
+    }
+    else
+    {
+        cout << "Chip " << p.chip << " does not have an original spot." << endl;
+    }
+}
+
+void Board::addChip(Player& p)
+{
+    cout << "Type what spot you want on the board: ";
+    cin >> spot;
+
+    bool found = false;
+    int matchCount = 0;
+    int matchRow[2] = { -1, -1 };
+    int matchCol[2] = { -1, -1 };
+
+
+    // Find the matching cards on the board for the selected card
+    for (int i = 0; i < ROWS; ++i)
+    {
+        for (int j = 0; j < COLS; ++j)
+        {
+            if (board[i][j] == spot)
+            {
+                matchRow[matchCount] = i;
+                matchCol[matchCount] = j;
+                matchCount++;
+            }
+        }
+    }
+
+    if (matchCount == 2)
+    {
+        found = true;
+
+        // Prompt the user to choose which card to swap
+        int choice;
+        cout << "There are two spots the same on the board. Choose (1) or (2): ";
+        cin >> choice;
+
+        // Swap the chosen card with the chip
+        if (choice == 1)
+        {
+            board[matchRow[0]][matchCol[0]] = p.chip;
+        }
+        else if (choice == 2)
+        {
+            board[matchRow[1]][matchCol[1]] = p.chip;
+        }
+        matchCount--; //one less match now 
+    }
+    else
+    {
+        found = true;
+
+        // Find the next matching card and swap it with the chip
+        for (int i = 0; i < ROWS; ++i)
+        {
+            for (int j = 0; j < COLS; ++j)
+            {
+                if (board[i][j] == spot)
+                {
+                    board[i][j] = p.chip;
+                    break;
+                }
+            }
+        }
+    }
+
+    if (!found)
+    {
+        cout << "Sorry, that spot is taken.." << endl;
+    }
 }
 
 //done

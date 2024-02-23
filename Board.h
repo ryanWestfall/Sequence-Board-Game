@@ -33,6 +33,7 @@ public:
     int getCols() const { return COLS; }
     void displayBoard();
     void putChipOnBoard(string, Player &p);
-    void removeChip();
+    void removeChip(Player&);
+    void addChip(Player&);
     bool sequenceW(Player& p);
 };
